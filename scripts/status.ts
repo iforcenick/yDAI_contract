@@ -9,6 +9,7 @@ async function main() {
   const ydaiContract = new ethers.Contract(ydaiAddress, YDAIAbi, account)
   const daiContract = new ethers.Contract(daiAddress, DAIAbi, account)
   console.log(await ydaiContract.getMetadata(account.address))
+  console.log(await ydaiContract.balanceOf(account.address))
 };
 main().catch((error) => {
   console.error(error);

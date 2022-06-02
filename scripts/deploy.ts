@@ -17,6 +17,8 @@ async function main() {
   const YDai = await ethers.getContractFactory("YDAI");
   const ydaiDeployed = await YDai.deploy();
 
+  await ydaiDeployed.deployed()
+
   console.log("yDai deployed to:", ydaiDeployed.address);
 }
 

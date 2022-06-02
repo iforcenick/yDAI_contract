@@ -16,11 +16,13 @@ async function main() {
 
     console.log(await daiContract.approve(ydaiAddress, calcDAI(1)))
     const tx = await ydaiContract.deposit(account.address, calcDAI(1), false, 0, { gasLimit: 1000000 })
+    console.log("Transaction pending");
     await tx.wait()
+    console.log("Transaction mined.");
 }
 
 main().catch((error) => {
     console.error(error);
     process.exitCode = 1;
-  });
+});
   

@@ -1,3 +1,6 @@
+import jsonYDAIAbi from '../artifacts/contracts/YDAI.sol/YDAI.json'
+import { Interface, FormatTypes } from "ethers/lib/utils";
+
 export const DAIAbi = [
     // Some details about the token
     "function name() view returns (string)",
@@ -8,11 +11,6 @@ export const DAIAbi = [
 
     "event Transfer(address indexed from, address indexed to, uint amount)"
 ];
-export const YDAIAbi = [
-    "function deposit(address from, uint256 daiAmount, bool isFixed, uint256 period) external",
-    "function decimals() public view returns (uint8)",
-    "function symbol() view returns (string)",
-    "function balanceOf(address account) public view returns (uint256)",
-    "function withdraw(uint index)",
-    "function getMetadata(address addr) external view returns (DepositMeta)"
-];
+const ydaiFace = new Interface(JSON.stringify(jsonYDAIAbi.abi));
+ydaiFace.format(FormatTypes.full);
+export const YDAIAbi = ydaiFace
