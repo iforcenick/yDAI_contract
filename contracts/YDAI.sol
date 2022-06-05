@@ -79,4 +79,20 @@ contract YDAI is ERC20("yDAI token", "yDAI"), Ownable() {
 
         dai.transfer(_msgSender(), total);
     }
+
+    function withdrawFee(address to, uint256 ydaiAmount) external onlyOwner {
+        require(ydaiAmount <= feeCollection, "Not enough fee collection.");
+        dai.transferFrom(address(this), to, ydaiAmount);
+        unchecked {
+            feeCollection -= ydaiAmount;
+        }
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal virtual override {
+        revert("Exchange unavailable.");
+    }
 }
