@@ -1,31 +1,32 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-
-import { daiAddress, ydaiAddress } from '../scripts/_address'
-import { YDAIAbi, DAIAbi } from "../scripts/_interface";
-
+// import { usdcAddress } from '../scripts/_address'
 
 describe("Greeter", function () {
   it("Should return the new greeting once it's changed", async function () {
-    const [tmp, account] = await ethers.getSigners()
-    const ydaiContract = new ethers.Contract(ydaiAddress, YDAIAbi, account)
 
-    // let daiFace = new ethers.utils.Interface(ABI);
-    // const encoded = daiFace.encodeFunctionData("approve", [ ydai.address, 5 ])
-    const daiContract = new ethers.Contract(daiAddress, DAIAbi, account)
-    expect("DAI").to.equal(await daiContract.symbol())
+    const MyNFT = await ethers.getContractFactory("MyNFT");
+    const myNFT = await MyNFT.deploy();
+    await myNFT.deployed();
 
-    console.log(await daiContract.approve(ydaiAddress, 1))
-    const tx = await ydaiContract.deposit(account.address, 1, false, 0, { gasLimit: 1000000 })
-    await tx.wait()
-    expect(18).to.equal(await daiContract.balanceOf(account.address))
+    const USDC = await ethers.getContractFactory("USDC");
+    const usdc = await USDC.deploy();
+    await usdc.deployed();
 
-    // const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+    const Borrower = await ethers.getContractFactory("Borrower");
+    const borrower = await Borrower.deploy(usdc.address, myNFT.address);
+    await borrower.deployed();
 
-    // // wait until the transaction is mined
-    // await setGreetingTx.wait();
+    const [deployer, user1] = await ethers.getSigners()
 
-    // expect(await greeter.greet()).to.equal("Hola, mundo!");
+    const mintFTTx = await usdc.mint(deployer.address, "10000")
+    await mintFTTx.wait()
+
+    const mintNFTTx = await myNFT.safeMint(5000)
+    await mintNFTTx.wait()
+
+    const borrowTx = await borrower.borrow(0, 100, { from: user1.address })
+    await borrowTx.wait()
   });
 });
